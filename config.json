@@ -1,0 +1,10 @@
+{
+    "label_bg": "#2c3e50",
+    "fg_color": "#ecf0f1",
+    "light_color": "#c61212",
+    "font_setting": [
+        "Helvetica",
+        10,
+        "bold"
+    ]
+}
