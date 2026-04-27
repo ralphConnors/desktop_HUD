@@ -4,6 +4,7 @@ import keyboard
 from config_utils import load_config, save_config
 
 hud_process = None
+parent_pid = None
 toggle_pressed = False
 
 def start_drag(event):
@@ -14,7 +15,7 @@ def do_drag(event):
     app.geometry(f"+{event.x_root - app._offset_x}+{event.y_root - app._offset_y}")
 
 def save_and_reload():
-    global hud_process
+    global hud_process, parent_pid
 
     new_config = {
         "label_bg": bg_entry.get(),
@@ -27,6 +28,12 @@ def save_and_reload():
     if hud_process and hud_process.poll() is None:
         hud_process.terminate()
         hud_process.wait()
+    elif parent_pid:
+        try:
+            os.kill(parent_pid, 9)
+        except Exception:
+            pass
+        parent_pid = None
 
     hud_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "keyboard_HUD.py")
     hud_process = subprocess.Popen([sys.executable, hud_path])
@@ -59,6 +66,11 @@ if len(sys.argv) >= 3:
     initial_pos = f"+{sys.argv[1]}+{sys.argv[2]}"
 else:
     initial_pos = "+50+50"
+
+try:
+    parent_pid = int(sys.argv[3]) if len(sys.argv) >= 4 else None
+except (IndexError, ValueError):
+    parent_pid = None
 
 app = Tk()
 

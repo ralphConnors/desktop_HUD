@@ -88,9 +88,8 @@ def check_config_macro():
                     config_process.wait()
                 else:
                     config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config_gui.py")
-                    # Pass current window coordinates to the config GUI
                     x, y = app.winfo_x(), app.winfo_y()
-                    config_process = subprocess.Popen([sys.executable, config_path, str(x), str(y)])
+                    config_process = subprocess.Popen([sys.executable, config_path, str(x), str(y), str(os.getpid())])
                 config_toggle_pressed = True
         else:
             config_toggle_pressed = False
